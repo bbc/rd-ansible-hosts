@@ -1,0 +1,56 @@
+---
+# module: rd-ansible-hosts/tasks/configure
+# description: Configure hostname and hostfile
+
+- name: Print out variables as an early check
+  debug:
+    msg: "hosts_hostname: {{ hosts_hostname }} domain_name: {{ domain_name }}"
+
+- name: Unmount files in docker container to allow us to copy over
+  mount:
+    path: "{{ item }}"
+    state: unmounted
+  failed_when: false
+  with_items:
+    - /etc/hosts
+    - /etc/hostname
+  when: ansible_virtualization_type|default('unknown') == 'docker'
+
+- name: Create a default /etc/hosts file using template
+  template:
+    src: hosts.j2
+    dest: /etc/hosts
+  when: hosts_replace_hosts_file
+
+- name: Add data to /etc/hosts file from template
+  blockinfile:
+    name: /etc/hosts
+    marker: "# {mark} ANSIBLE HOST BLOCK"
+    block: "{{ lookup('template', 'templates/hosts.j2') }}"
+  when: 'hosts_replace_hosts_file == false'
+
+- name: Set hostname
+  copy:
+    content: "{{ hosts_hostname }}"
+    dest: '/etc/hostname'
+
+- name: Set live hostname - Not on LXC
+  hostname:
+    name: "{{ hosts_hostname }}"
+  when: ansible_virtualization_type|default('unknown') != 'lxc'
+
+- name: Check current live hostname
+  command: 'hostname -f'
+  register: current_hostname
+  changed_when: false
+  ignore_errors: true
+
+- name: Set live hostname - LXC Containers
+  command: "/bin/hostname {{ hosts_hostname }}"
+  when:
+    - ansible_virtualization_type|default('unknown') == 'lxc'
+    - current_hostname.stdout != hosts_hostname
+
+- name: Set Ansible hostname fact
+  set_fact:
+    ansible_fqdn: "{{ hosts_hostname }}"

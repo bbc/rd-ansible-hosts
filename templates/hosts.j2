@@ -1,0 +1,18 @@
+### MANAGED BY {{ role_path|basename }} ANSIBLE ROLE ###
+127.0.0.1   {{ hosts_hostname }}{% if hosts_hostname.split('.')[0] != hosts_hostname %} {{ hosts_hostname.split('.')[0] }}{% endif %} localhost
+::1         localhost ip6-localhost ip6-loopback
+
+# The following lines are desirable for IPv6 capable hosts
+::1 ip6-localhost ip6-loopback
+fe00::0     ip6-localnet
+ff00::0     ip6-mcastprefixa
+ff02::1     ip6-allnodes
+ff02::2     ip6-allrouters
+ff02::3     ip6-allhosts
+
+{% if static_hosts.0 is defined and static_hosts.0.name is defined %}
+# Ansible generated hosts
+{% for host in static_hosts %}
+{{ host.ip }} {{ host.name }}
+{% endfor %}
+{% endif %}

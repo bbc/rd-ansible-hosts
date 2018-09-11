@@ -1,0 +1,32 @@
+---
+- hosts: all
+  become: yes
+  gather_facts: true
+  become_method: sudo
+  vars:
+    # Use Python 3 instead of 2
+    ansible_python_interpreter: /usr/bin/python3
+
+    # Infer system domain name by looking at host machine
+    domain_name: "{{ lookup('pipe', 'host $(hostname -s) | grep address | cut -d\" \" -f1 | cut -d\".\" -f2-') }}"
+
+    # Set up some static hosts for testing
+    static_hosts:
+      - name: test1
+        ip: 169.254.0.5
+      - name: test2
+        ip: 169.254.0.6
+      - name: test3
+        ip: 169.254.0.7
+      - name: test4
+        ip: 169.254.0.8
+
+    # Proxy
+    proxy_env:
+      http_proxy: "{{ lookup('env','http_proxy') }}"
+      https_proxy: "{{ lookup('env','https_proxy') }}"
+      rsync_proxy: "{{ lookup('env','rsync_proxy') }}"
+
+  roles:
+    - role: "{{ playbook_dir | dirname }}"
+  environment: "{{ proxy_env }}"

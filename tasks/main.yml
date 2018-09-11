@@ -1,0 +1,5 @@
+---
+# module: rd-ansible-hosts/tasks
+# description: Configure the hosts file and hostname on an Ubuntu 16 or 18 server
+
+- include_tasks: configure.yml

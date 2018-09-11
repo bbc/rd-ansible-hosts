@@ -1,0 +1,25 @@
+---
+# name: rd-ansible-hosts/defaults
+# description: ALL our default variables for rd-ansible-hosts go in here
+#------------------------------------------------------------------------------
+# Packages - All our required packages we need installing
+#------------------------------------------------------------------------------
+
+# - variables -
+# If this is set to false then the existing hosts file is retained rather than templated over
+hosts_replace_hosts_file: false
+
+# List of static hosts, these will be placed into the hosts file allowing for bypass of DNS
+static_hosts: []
+
+# Example layout:
+# This is an example host, and will be created as name.domain_name as defined below
+# static_hosts:
+#   - name: hostname
+#     ip: 123.123.123.124
+
+# What will our default domain name be for hosts
+domain_name: ""
+
+# This is defined here to allow you to build up the hostname differently, ie using ansible_hostname or inventory_hostname depending on circumstances.
+hosts_hostname: "{{ ansible_hostname }}{{ '.' + domain_name if domain_name|length > 0 else '' }}"
