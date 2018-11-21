@@ -1,9 +1,9 @@
 ---
 # name: rd-ansible-hosts/defaults
 # description: ALL our default variables for rd-ansible-hosts go in here
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Packages - All our required packages we need installing
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 # - variables -
 # If this is set to false then the existing hosts file is retained rather than templated over
@@ -21,5 +21,6 @@ static_hosts: []
 # What will our default domain name be for hosts
 domain_name: ""
 
-# This is defined here to allow you to build up the hostname differently, ie using ansible_hostname or inventory_hostname depending on circumstances.
+# This is defined here to allow you to build up the hostname differently,
+# ie using ansible_hostname or inventory_hostname depending on circumstances.
 hosts_hostname: "{{ ansible_hostname }}{{ '.' + domain_name if domain_name|length > 0 else '' }}"
