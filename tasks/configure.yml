@@ -27,7 +27,7 @@
     name: /etc/hosts
     marker: "# {mark} ANSIBLE HOST BLOCK"
     block: "{{ lookup('template', 'templates/hosts.j2') }}"
-  when: 'hosts_replace_hosts_file == false'
+  when: not hosts_replace_hosts_file | bool
 
 - name: Set hostname
   copy:
