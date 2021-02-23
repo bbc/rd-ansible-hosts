@@ -1,9 +1,12 @@
 ### MANAGED BY {{ role_path|basename }} ANSIBLE ROLE ###
 127.0.0.1   {{ hosts_hostname }}{% if hosts_hostname.split('.')[0] != hosts_hostname %} {{ hosts_hostname.split('.')[0] }}{% endif %} localhost
+{% if hosts_ipv6_localhost %}
+::1         localhost ip6-localhost ip6-loopback {{ hosts_hostname }}{% if hosts_hostname.split('.')[0] != hosts_hostname %} {{ hosts_hostname.split('.')[0] }}{% endif %}
+{% else %}
 ::1         localhost ip6-localhost ip6-loopback
+{% endif %}
 
 # The following lines are desirable for IPv6 capable hosts
-::1 ip6-localhost ip6-loopback
 fe00::0     ip6-localnet
 ff00::0     ip6-mcastprefixa
 ff02::1     ip6-allnodes

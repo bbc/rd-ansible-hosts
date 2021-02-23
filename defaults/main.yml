@@ -9,6 +9,9 @@
 # If this is set to false then the existing hosts file is retained rather than templated over
 hosts_replace_hosts_file: false
 
+# Set this true if you want hostname and FQDN to resolve to ::1 as well as 127.0.0.1 (to prioritize IPv6 over IPv4)
+hosts_ipv6_localhost: false
+
 # List of static hosts, these will be placed into the hosts file allowing for bypass of DNS
 static_hosts: []
 
