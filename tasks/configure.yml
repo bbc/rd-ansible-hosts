@@ -34,22 +34,9 @@
     content: "{{ hosts_hostname }}"
     dest: '/etc/hostname'
 
-- name: Set live hostname - Not on LXC
+- name: Set live hostname
   hostname:
     name: "{{ hosts_hostname }}"
-  when: ansible_virtualization_type|default('unknown') != 'lxc'
-
-- name: Check current live hostname
-  command: 'hostname -f'
-  register: current_hostname
-  changed_when: false
-  ignore_errors: true
-
-- name: Set live hostname - LXC Containers
-  command: "/bin/hostname {{ hosts_hostname }}"
-  when:
-    - ansible_virtualization_type|default('unknown') == 'lxc'
-    - current_hostname.stdout != hosts_hostname
 
 - name: Set Ansible hostname fact
   set_fact:
